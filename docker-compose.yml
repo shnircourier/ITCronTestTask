@@ -10,12 +10,26 @@
       - postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - app-network
   
-#  itcrontesttask.api:
-#    image: itcrontesttask.api
-#    build:
-#      context: .
-#      dockerfile: ITCronTestTask.API/Dockerfile
+  itcrontesttask.api:
+    container_name: itcrontesttask.api
+    image: itcrontesttask.api
+    build:
+      context: .
+      dockerfile: ITCronTestTask.API/Dockerfile
+    environment:
+      - ConnectionStrings__IpInfoDbContext=User ID=postgres;Password=123;Host=postgres;Port=5432;Database=ITCronTestTask;
+    ports:
+      - "28000:8080"
+    depends_on:
+      - postgres
+    restart: on-failure
+    networks:
+      - app-network
 
 volumes: 
   postgres-data:
+networks:
+  app-network:
